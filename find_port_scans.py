@@ -35,4 +35,15 @@ with open(r'C:\Users\rubes\COMP593-Lab4\gateway.log', 'r') as log_file:
 
     # Sort the list in final_lst
     final_lst.sort()
+    # Count the number of occurences of a single IP address
+    occr = {} 
+    for src_port in final_lst:
+        occr[src_port] = occr.get(src_port, 0) + 1
     
+    # Make a list to be added to a file with format of Occurence - src:port
+    [final_format.append(f'{v} - {k}') for k, v in occr.items()]   
+
+with open(r'C:\Users\rubes\COMP593-Lab4\report.txt', 'w') as txt_file:
+    for line in final_format:
+        txt_file.write(f'{line}\n')
+
