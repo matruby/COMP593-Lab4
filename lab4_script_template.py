@@ -4,7 +4,6 @@ import os
 
 def main():
     log_file = get_log_file_path_from_cmd_line()
-    print(log_file)
 
 # TODO: Step 3
 def get_log_file_path_from_cmd_line():
@@ -14,14 +13,8 @@ def get_log_file_path_from_cmd_line():
     # Check if there is only 1 argument given, if the path given is a file and is a log file
     if len(log_path) == 2 and os.path.isfile(log_path[1]) and log_path[1][-4:] == '.log':
         return log_path[1]
-    elif len(log_path) > 2:
-        print('Too many arguments given!!\nEXITING')
-        sys.exit()
-    elif len(log_path) < 1:
-        print('Add a log file path as argument, then retry')
-        sys.exit()
     else:
-        print("File doesn't exist, try with an existing file\nOr file isn't a log file")
+        print("File doesn't exist\nOr file isn't a log file")
         sys.exit()
 
 
