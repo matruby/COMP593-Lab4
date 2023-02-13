@@ -1,6 +1,7 @@
 
 from log_analysis import  get_log_file_path_from_cmd_line, filter_log_by_regex
 import re
+import pandas as pd
 
 def main():
     # Check if the log file exists
@@ -10,8 +11,7 @@ def main():
     # Get a tally of all the destination ports 
     port_dict = tally_port_traffic(log_file)
     # Port Reports 
-    port_stats = generate_port_traffic_report(log_file, 40686)
-    print(port_stats[:6])
+    generate_port_traffic_report(log_file, 40686)
 
 def tally_port_traffic(log_file):
     """Process the log file and tally the number of records for each DPT"""
@@ -41,7 +41,7 @@ def generate_port_traffic_report(log_file, port_number):
         all_lines = logs.readlines()
         
         # Regex to match all dates
-        groups_regex = f'([A-Z][a-z]+)\s([0-9]+)\s([0-9]+:[0-9]+:[0-9]+).*SRC=([0-9]+[.][0-9]+[.][0-9]+[.][0-9]+).*DST=([0-9]+[.][0-9]+[.][0-9]+[.][0-9]+).*SPT=([0-9]+).*DPT=({port_number})'
+        groups_regex = f'([A-Z][a-z]+\s[0-9]+)\s([0-9]+:[0-9]+:[0-9]+).*SRC=([0-9]+[.][0-9]+[.][0-9]+[.][0-9]+).*DST=([0-9]+[.][0-9]+[.][0-9]+[.][0-9]+).*SPT=([0-9]+).*DPT=({port_number})'
         # Convert to a raw string
         raw_re = repr(groups_regex)[1:-1] 
 
@@ -52,8 +52,14 @@ def generate_port_traffic_report(log_file, port_number):
 
             if group_match:
                 report_info.append(group_match.groups())
-                
-    return report_info 
+
+        # Make a dataframe of the data grabbed from the log
+        report_df = pd.DataFrame(report_info, columns=['Date', 'Time', 'Source IP Address', \
+                'Destination IP Address', 'Source Port', 'Destination Port'])
+
+        # Make a csv file from the dataframe
+        report_df.to_csv(f'.\destination_port_{port_number}_report.csv')
+    return None 
 
 # TODO: Step 11
 def generate_invalid_user_report(log_file):
