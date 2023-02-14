@@ -13,22 +13,18 @@ def get_log_file_path_from_cmd_line():
     else: 
         print("File doesn't exist\nOr file isn't a log file") 
         sys.exit() 
-
      
 def filter_log_by_regex(log_file, regex, ignore_case=True, print_summary=False, print_records=False): 
     """Gets a list of records in a log file that match a specified regex."""  
-    # List of matching lines from regex
     matched_lines = [] 
     # Convert the regex to a raw string
     raw_re = repr(regex)[1:-1] 
-    # Open the log file in read mode 
+
     with open(log_file, 'r') as read_file:
-        # Read all of the lines into a list called logs
         logs = read_file.readlines()
         
         # Look through all the logs line by line
         for log in logs:
-            # See if the search is case-sensitive or case-insensitive
             if ignore_case:
                 search_match = re.search(raw_re, log, re.I)
             else:
@@ -49,8 +45,4 @@ def filter_log_by_regex(log_file, regex, ignore_case=True, print_summary=False, 
         print(f"The regex matching was case{'in' if ignore_case else ''}-sensitive.")
     
     return matched_lines
-
-
-
-
 
